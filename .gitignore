@@ -1,0 +1,18 @@
+# Targets.txt Sources.txt
+*.txt
+
+# Helper programs
+*.php
+
+# IDE generated stuff
+functions-list.c
+views/
+Makefile
+
+# sublime project
+*.sublime-project
+*.sublime-workspace
+
+# outputs
+*.o
+*.exe
