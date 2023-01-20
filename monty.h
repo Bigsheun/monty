@@ -53,7 +53,8 @@ typedef struct bus_s
 	int lifi;
 }  bus_t;
 
-bus_t bus = {NULL, NULL, NULL, 0};
+#define EMPTY_BUS {NULL, NULL, NULL, 0}
+extern bus_t bus;
 
 /*#include 'functions-list.c"*/
 

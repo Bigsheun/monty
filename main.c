@@ -1,4 +1,5 @@
 #include "monty.h"
+#include "monty-global.h"
 
 /**
 * main - monty code interpreter
