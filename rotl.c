@@ -9,6 +9,7 @@ void f_rotl(stack_t **head,  __attribute__((unused)) unsigned int counter)
 {
 	stack_t *tmp = *head, *aux;
 
+	bus.err_code = MNT_OK;
 	if (*head == NULL || (*head)->next == NULL)
 	{
 		return;
@@ -35,6 +36,7 @@ void f_rotr(stack_t **head, __attribute__((unused)) unsigned int counter)
 {
 	stack_t *copy;
 
+	bus.err_code = MNT_OK;
 	copy = *head;
 	if (*head == NULL || (*head)->next == NULL)
 	{

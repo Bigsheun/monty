@@ -10,24 +10,20 @@ void f_pchar(stack_t **head, unsigned int counter)
 {
 	stack_t *h;
 
+	(void) counter;
 	h = *head;
 	if (!h)
 	{
-		fprintf(stderr, "L%d: can't pchar, stack empty\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
+		bus.err_code = MNT_ERR_STK_E_PCHAR;
+		return;
 	}
 	if (h->n > 127 || h->n < 0)
 	{
-		fprintf(stderr, "L%d: can't pchar, value out of range\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
+		bus.err_code = MNT_ERR_PCHAR_OOR;
+		return;
 	}
 	printf("%c\n", h->n);
+	bus.err_code = MNT_OK;
 }
 
 /**
@@ -53,5 +49,6 @@ void f_pstr(stack_t **head, unsigned int counter)
 		h = h->next;
 	}
 	printf("\n");
+	bus.err_code = MNT_OK;
 }
 

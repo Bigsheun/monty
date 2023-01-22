@@ -9,6 +9,8 @@ void f_push(stack_t **head, unsigned int counter)
 {
 	int n, j = 0, flag = 0;
 
+	(void) counter;
+	bus.err_code = MNT_OK;
 	if (bus.arg)
 	{
 		if (bus.arg[0] == '-')
@@ -18,20 +20,14 @@ void f_push(stack_t **head, unsigned int counter)
 				flag = 1;
 		if (flag == 1)
 		{
-			fprintf(stderr, "L%d: usage: push integer\n", counter);
-			fclose(bus.file);
-			free(bus.content);
-			free_stack(*head);
-			exit(EXIT_FAILURE);
+			bus.err_code = MNT_ERR_SYNTX_PUSH;
+			return;
 		}
 	}
 	else
 	{
-		fprintf(stderr, "L%d: usage: push integer\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
+		bus.err_code = MNT_ERR_SYNTX_PUSH;
+		return;
 	}
 
 	n = atoi(bus.arg);
@@ -51,13 +47,12 @@ void f_pop(stack_t **head, unsigned int counter)
 {
 	stack_t *h;
 
+	(void) counter;
+	bus.err_code = MNT_OK;
 	if (*head == NULL)
 	{
-		fprintf(stderr, "L%d: can't pop an empty stack\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
+		bus.err_code = MNT_ERR_STK_E_POP;
+		return;
 	}
 	h = *head;
 	*head = h->next;
@@ -75,6 +70,8 @@ void f_swap(stack_t **head, unsigned int counter)
 	stack_t *h;
 	int len = 0, aux;
 
+	(void) counter;
+	bus.err_code = MNT_OK;
 	h = *head;
 	while (h)
 	{
@@ -83,11 +80,8 @@ void f_swap(stack_t **head, unsigned int counter)
 	}
 	if (len < 2)
 	{
-		fprintf(stderr, "L%d: can't swap, stack too short\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
+		bus.err_code = MNT_ERR_STK_E_SWP;
+		return;
 	}
 	h = *head;
 	aux = h->n;

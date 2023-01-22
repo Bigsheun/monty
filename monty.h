@@ -16,9 +16,9 @@
 */
 typedef struct stack_s
 {
-        int n;
-        struct stack_s *prev;
-        struct stack_s *next;
+	int n;
+	struct stack_s *prev;
+	struct stack_s *next;
 } stack_t;
 /**
 * struct instruction_s - opcode and its function
@@ -30,75 +30,89 @@ typedef struct stack_s
 */
 typedef struct instruction_s
 {
-        char *opcode;
-        void (*f)(stack_t **stack, unsigned int line_number);
+	char *opcode;
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
 /**
 * struct bus_s - variables -args, file, line content
 * @arg: value
-* @file: pointer to monty file
+* @opcode: String (opcode)
 * @content: line content
 * @lifi: flag change stack <-> queue
+* @err_code: helps to record error code (later used for error print)
 * Description: carries values through the program
 */
 typedef struct bus_s
 {
 	char *arg;
-	FILE *file;
+	char *opcode;
 	char *content;
 	int lifi;
+	int err_code;
 }  bus_t;
 
-#define EMPTY_BUS {NULL, NULL, NULL, 0}
+#define EMPTY_BUS {NULL, NULL, NULL, 0, 0}
+
+#define MNT_OK 0
+#define MNT_ERR_STK_E_PINT 1
+#define MNT_ERR_UNKNOWN 2
+#define MNT_ERR_STK_E_PCHAR 3
+#define MNT_ERR_PCHAR_OOR 4
+#define MNT_ERR_STK_E_ADD 5
+#define MNT_ERR_STK_E_SUB 6
+#define MNT_ERR_STK_E_MUL 7
+#define MNT_ERR_STK_E_DIV 8
+#define MNT_ERR_DIV_ZERO  9
+#define MNT_ERR_STK_E_MOD 10
+#define MNT_ERR_SYNTX_PUSH 11
+#define MNT_ERR_STK_E_POP 12
+#define MNT_ERR_STK_E_SWP 13
+
 extern bus_t bus;
 
 /*#include 'functions-list.c"*/
 
 
-/*add.c*/
+/*arg-split.c*/
+short found_in(char c, char *s);
+int wordstart(char *str, char *delims, int index);
+int delimstart(char *str, char *delims, int index);
+int wordcount(char *str, char *delims);
+char **split_arg(char *arg, char *delims);
+/*arith.c*/
 void f_add(stack_t **head, unsigned int counter);
-/*addnode.c*/
-void addnode(stack_t **head, int n);
-/*div.c*/
+void f_sub(stack_t **head, unsigned int counter);
+void f_mul(stack_t **head, unsigned int counter);
 void f_div(stack_t **head, unsigned int counter);
+void f_mod(stack_t **head, unsigned int counter);
 /*execute.c*/
-int execute(char *content, stack_t **stack, unsigned int counter, FILE *file);
-/*free_stack.c*/
-void free_stack(stack_t *head);
+int execute(char *content, stack_t **stack, unsigned int counter);
+void print_error(int counter, char *op);
 /*main.c*/
 int main(int argc, char *argv[]);
-/*mod.c*/
-void f_mod(stack_t **head, unsigned int counter);
-/*mul.c*/
-void f_mul(stack_t **head, unsigned int counter);
-/*nop.c*/
-void f_nop(stack_t **head, unsigned int counter);
+long int file_Size(char *file_name);
+char *file_load_all(char *Filename);
+void free_all(stack_t *stack, char *content, char **conten_array);
 /*pall.c*/
 void f_pall(stack_t **head, unsigned int counter);
+void f_pint(stack_t **head, unsigned int counter);
+void f_nop(stack_t **head, unsigned int counter);
 /*pchar.c*/
 void f_pchar(stack_t **head, unsigned int counter);
-/*pint.c*/
-void f_pint(stack_t **head, unsigned int counter);
-/*pop.c*/
-void f_pop(stack_t **head, unsigned int counter);
-/*pstr.c*/
 void f_pstr(stack_t **head, unsigned int counter);
 /*push.c*/
 void f_push(stack_t **head, unsigned int counter);
-/*queue.c*/
-void f_queue(stack_t **head, unsigned int counter);
-void addqueue(stack_t **head, int n);
+void f_pop(stack_t **head, unsigned int counter);
+void f_swap(stack_t **head, unsigned int counter);
 /*rotl.c*/
 void f_rotl(stack_t **head,  __attribute__((unused)) unsigned int counter);
-/*rotr.c*/
 void f_rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
-/*stack.c*/
+/*stack_queue.c*/
 void f_stack(stack_t **head, unsigned int counter);
-/*sub.c*/
-void f_sub(stack_t **head, unsigned int counter);
-/*swap.c*/
-void f_swap(stack_t **head, unsigned int counter);
-
+void addnode(stack_t **head, int n);
+void f_queue(stack_t **head, unsigned int counter);
+void addqueue(stack_t **head, int n);
+void free_stack(stack_t *head);
 
 #endif
