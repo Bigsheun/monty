@@ -3,7 +3,6 @@
 * execute - executes the opcode
 * @stack: head linked list - stack
 * @counter: line_counter
-* @file: poiner to monty file
 * @content: line content
 * Return: no return
 */
@@ -13,10 +12,10 @@ int execute(char *content, stack_t **stack, unsigned int counter)
 	char *op, **content_array;
 	instruction_t opst[] = INSTRUCTIONSET;
 
-	content_array = split_arg(content, " \n\t");
+	content_array = split_arg(content, " \t");
 	op = content_array[0];
 	bus.opcode  = op;
-	if (op && ((op[0] == '#') || (op == NULL)))
+	if ((op == NULL) || (op[0] == '#'))
 	{
 		free(content_array);
 		return (MNT_OK);
@@ -40,8 +39,8 @@ int execute(char *content, stack_t **stack, unsigned int counter)
 /**
 * print_error - prints the designated error message
 * error code is found in bus.err_code (global variable)
-* counter: line number actually
-* op: opcode
+* @counter: line number actually
+* @op: opcode
 */
 void print_error(int counter, char *op)
 {

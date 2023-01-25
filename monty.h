@@ -81,6 +81,17 @@ typedef struct bus_s
 
 extern bus_t bus;
 
+/**
+* struct str_list - linked list to hold strings
+* @str: string
+* @next: points to the next element of the stack (or queue)
+*
+*/
+typedef struct str_list
+{
+	char *str;
+	struct str_list *next;
+} list_s;
 
 
 /*#include "functions-list.c"*/
@@ -105,7 +116,8 @@ void print_error(int counter, char *op);
 int main(int argc, char *argv[]);
 long int file_Size(char *file_name);
 char *file_load_all(char *Filename);
-void free_all(stack_t *stack, char *content, char **conten_array);
+void free_all(stack_t *stack, char *content);
+char *s_getline(char *pLine);
 /*pall.c*/
 void f_pall(stack_t **head, unsigned int counter);
 void f_pint(stack_t **head, unsigned int counter);
@@ -126,7 +138,6 @@ void addnode(stack_t **head, int n);
 void f_queue(stack_t **head, unsigned int counter);
 void addqueue(stack_t **head, int n);
 void free_stack(stack_t *head);
-
 
 
 #endif

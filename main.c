@@ -10,7 +10,6 @@
 int main(int argc, char *argv[])
 {
 	char *content;
-	char **conten_array;
 	stack_t *stack = NULL;
 	unsigned int counter = 0;
 	int result;
@@ -22,21 +21,23 @@ int main(int argc, char *argv[])
 	}
 
 	content = file_load_all(argv[1]);
-	conten_array = split_arg(content, "\n");
 
+	content = s_getline(content);
 	counter = 0;
-	while (conten_array[counter] != NULL)
+	while (content != NULL)
 	{
-		bus.content = conten_array[counter];
-		content = conten_array[counter];
+		bus.content = content;
 		result = execute(content, &stack, counter);
+
 		if (result != MNT_OK)
 			break;
+
+		content = s_getline(NULL);
 		counter++;
 	}
 
 	print_error(counter, bus.opcode);
-	free_all(stack, content, conten_array);
+	free_all(stack, content);
 
 	if (bus.err_code != MNT_OK)
 	exit(EXIT_FAILURE);
@@ -46,9 +47,9 @@ int main(int argc, char *argv[])
 
 /**
 * file_Size - compute the size of a file
-* file_name: Name(path) of the file
+* @file_name: Name(path) of the file
 *
-* return: the length of the file
+* Return: the length of the file
 */
 
 long int file_Size(char *file_name)
@@ -76,9 +77,9 @@ long int file_Size(char *file_name)
 
 /**
 * file_load_all - loads an entire file
-* Filename: name of file to load
+* @Filename: name of file to load
 *
-* return: a string holding the content
+* Return: a string holding the content
 */
 char *file_load_all(char *Filename)
 {
@@ -101,14 +102,45 @@ char *file_load_all(char *Filename)
 
 /**
 * free_all - untility function to free the guys
-* stack: This is the main stack
-* content: This one holds the data read from file
-* conten_arrary: While this holds the pointers to the lines
-* when the content has been splitted
+* @stack: This is the main stack
+* @content: This one holds the data read from file
 */
-void free_all(stack_t *stack, char *content, char **conten_array)
+void free_all(stack_t *stack, char *content)
 {
 	free_stack(stack);
 	free(content);
-	free(conten_array);
+
+}
+
+/**
+* s_getline - Gets a line from string
+* @pLine: the string
+*
+* Return: Pointer to the line
+*/
+char *s_getline(char *pLine)
+{
+	static unsigned int index1, index2;
+	static char *Line;
+
+	if (pLine != NULL)
+	{
+		Line = pLine;
+		index1 = 0;
+	}
+	else
+		index1 = index2 + 1;
+	/*end if*/
+
+	if (Line[index1] == '\0')
+	{
+		return (NULL);
+	}
+
+	index2 = index1;
+	while (Line[index2] != '\n' && Line[index2] != '\0')
+		index2++;
+
+	Line[index2] = '\0';
+	return (&Line[index1]);
 }
