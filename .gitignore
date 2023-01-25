@@ -16,3 +16,4 @@ Makefile
 # outputs
 *.o
 *.exe
+compile

@@ -10,42 +10,31 @@
 int execute(char *content, stack_t **stack, unsigned int counter)
 {
 	unsigned int i;
-	char *op;
-	instruction_t opst[] = {
-		{"pall", f_pall}, {"pint", f_pint}, {"nop", f_nop},
-		{"push", f_push}, {"pop", f_pop}, {"swap", f_swap},
+	char *op, **content_array;
+	instruction_t opst[] = INSTRUCTIONSET;
 
-		{"add", f_add}, {"sub", f_sub},
-		{"mul", f_mul}, {"div", f_div}, {"mod", f_mod},
-
-		{"pchar", f_pchar}, {"pstr", f_pstr},
-		{"rotl", f_rotl}, {"rotr", f_rotr},
-
-		{"queue", f_queue}, {"stack", f_stack},
-		{NULL, NULL}
-	};
-
-	op = strtok(content, " \n\t");
-	if (op && op[0] == '#')
+	content_array = split_arg(content, " \n\t");
+	op = content_array[0];
+	bus.opcode  = op;
+	if (op && ((op[0] == '#') || (op == NULL)))
+	{
+		free(content_array);
 		return (MNT_OK);
+	}
 
-	bus.arg = strtok(NULL, " \n\t");
+	bus.arg = content_array[1];
 	for (i =  0; opst[i].opcode && op; i++)
 	{
 		if (strcmp(opst[i].opcode, op) == 0)
 		{
 			opst[i].f(stack, counter);
+			free(content_array);
 			return (bus.err_code);
 		}
 	}
-
-	if (op && opst[i].opcode == NULL)
-	{
-
-		bus.err_code = MNT_ERR_UNKNOWN;
-		return (MNT_ERR_UNKNOWN);
-	}
-	return (1);
+	bus.err_code = MNT_ERR_UNKNOWN;
+	free(content_array);
+	return (MNT_ERR_UNKNOWN);
 }
 
 /**
@@ -56,6 +45,8 @@ int execute(char *content, stack_t **stack, unsigned int counter)
 */
 void print_error(int counter, char *op)
 {
+	fflush(stdout);
+	counter += 1;
 	if (bus.err_code ==  MNT_ERR_STK_E_PINT)
 		fprintf(stderr, "L%u: can't pint, stack empty\n", counter);
 	else if (bus.err_code ==  MNT_ERR_UNKNOWN)
@@ -83,4 +74,5 @@ void print_error(int counter, char *op)
 	else if (bus.err_code == MNT_ERR_STK_E_SWP)
 		fprintf(stderr, "L%d: can't swap, stack too short\n", counter);
 	/*end-if*/
+	fflush(stderr);
 }

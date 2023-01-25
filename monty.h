@@ -20,10 +20,12 @@ typedef struct stack_s
 	struct stack_s *prev;
 	struct stack_s *next;
 } stack_t;
+
+#define Instruction_Function (*f)(stack_t **stack, unsigned int line_number)
 /**
 * struct instruction_s - opcode and its function
 * @opcode: the opcode
-* @f: function to handle the opcode
+* @Instruction_Function: function to handle the opcode
 *
 * Description: opcode and its function
 * for stack, queues, LIFO, FIFO
@@ -31,9 +33,17 @@ typedef struct stack_s
 typedef struct instruction_s
 {
 	char *opcode;
-	void (*f)(stack_t **stack, unsigned int line_number);
+	void Instruction_Function;
 } instruction_t;
 
+#define INSTRUCTIONSET {\
+	{"pall", f_pall}, {"pint", f_pint}, {"nop", f_nop},\
+	{"push", f_push}, {"pop", f_pop}, {"swap", f_swap},\
+	{"add", f_add}, {"sub", f_sub},\
+	{"mul", f_mul}, {"div", f_div}, {"mod", f_mod},\
+	{"pchar", f_pchar}, {"pstr", f_pstr},\
+	{"rotl", f_rotl}, {"rotr", f_rotr},\
+	{"queue", f_queue}, {"stack", f_stack}, {NULL, NULL}	}
 /**
 * struct bus_s - variables -args, file, line content
 * @arg: value
@@ -71,7 +81,9 @@ typedef struct bus_s
 
 extern bus_t bus;
 
-/*#include 'functions-list.c"*/
+
+
+/*#include "functions-list.c"*/
 
 
 /*arg-split.c*/
@@ -114,5 +126,7 @@ void addnode(stack_t **head, int n);
 void f_queue(stack_t **head, unsigned int counter);
 void addqueue(stack_t **head, int n);
 void free_stack(stack_t *head);
+
+
 
 #endif

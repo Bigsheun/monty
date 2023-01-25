@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 	while (conten_array[counter] != NULL)
 	{
 		bus.content = conten_array[counter];
+		content = conten_array[counter];
 		result = execute(content, &stack, counter);
 		if (result != MNT_OK)
 			break;
@@ -87,6 +88,8 @@ char *file_load_all(char *Filename)
 
 	Length = file_Size(Filename);
 	Buffer = (char *) malloc(sizeof(char) * Length + 1);
+	if (Buffer == NULL)
+		fprintf(stderr, "Error: malloc failed\n");
 
 	FP = fopen(Filename, "rb");
 	N = fread(Buffer, sizeof(char), Length, FP);
