@@ -121,25 +121,27 @@ void free_all(stack_t *stack, char *content)
 char *s_getline(char *pLine)
 {
 	static unsigned int index1, index2;
+	static int flag;
 	static char *Line;
 
 	if (pLine != NULL)
 	{
 		Line = pLine;
 		index1 = 0;
+		flag = 0;
 	}
 	else
 		index1 = index2 + 1;
-	/*end if*/
 
-	if (Line[index1] == '\0')
-	{
+	if (flag == -1)
 		return (NULL);
-	}
 
 	index2 = index1;
 	while (Line[index2] != '\n' && Line[index2] != '\0')
 		index2++;
+
+	if (Line[index2] == '\0')
+		flag = -1;
 
 	Line[index2] = '\0';
 	return (&Line[index1]);
