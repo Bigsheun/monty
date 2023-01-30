@@ -12,6 +12,19 @@ void f_stack(stack_t **head, unsigned int counter)
 	(void)counter;
 	bus.lifi = 0;
 }
+/**
+* f_queue - select queue
+* @head: stack head
+* @counter: line_number
+* Return: no return
+*/
+void f_queue(stack_t **head, unsigned int counter)
+{
+	(void)head;
+	(void)counter;
+
+	bus.lifi = 1;
+}
 
 /**
 * addnode - add node to the head stack
@@ -24,32 +37,29 @@ void addnode(stack_t **head, int n)
 
 	stack_t *new_node, *aux;
 
-	aux = *head;
 	new_node = malloc(sizeof(stack_t));
 	if (new_node == NULL)
-	{ printf("Error\n");
-		exit(0); }
-	if (aux)
-		aux->prev = new_node;
+	{
+		bus.err_code = MNT_ERR_MALLOC;
+		return;
+	}
 	new_node->n = n;
-	new_node->next = *head;
+
 	new_node->prev = NULL;
-	*head = new_node;
-}
 
-/**
-* f_queue - select queue
-* @head: stack head
-* @counter: line_number
-* Return: no return
-*/
-void f_queue(stack_t **head, unsigned int counter)
-{
-	(void)head;
-	(void)counter;
-	bus.lifi = 1;
+	aux = *head;
+	if (aux != NULL)
+	{
+		aux->prev = new_node;
+		new_node->next = aux;
+		*head = new_node;
+	}
+	else
+	{
+		*head = new_node;
+		new_node->next = NULL;
+	}
 }
-
 
 /**
 * addqueue - add node to the tail stack
@@ -61,26 +71,25 @@ void addqueue(stack_t **head, int n)
 {
 	stack_t *new_node, *aux;
 
-	aux = *head;
 	new_node = malloc(sizeof(stack_t));
 	if (new_node == NULL)
 	{
-		printf("Error\n");
+		bus.err_code = MNT_ERR_MALLOC;
+		return;
 	}
 	new_node->n = n;
 	new_node->next = NULL;
-	if (aux)
-	{
-		while (aux->next)
-			aux = aux->next;
-	}
-	if (!aux)
+
+	aux = *head;
+	if (aux == NULL)
 	{
 		*head = new_node;
 		new_node->prev = NULL;
 	}
 	else
 	{
+		while (aux->next)
+			aux = aux->next;
 		aux->next = new_node;
 		new_node->prev = aux;
 	}

@@ -96,6 +96,9 @@ char **split_arg(char *arg, char *delims)
 	count = wordcount(arg, delims);
 
 	words = malloc(sizeof(char *) * (count + 1));
+	if (words == NULL)
+		return (NULL);
+
 	for (i = 0; i < count && index != -1; i++)
 	{
 		index = wordstart(arg, delims, index);

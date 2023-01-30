@@ -7,17 +7,15 @@
 */
 void f_push(stack_t **head, unsigned int counter)
 {
-	int n, j = 0, flag = 0, SGN = 1;
+	int n, j = 0, flag = 0;
 
 	(void) counter;
 	bus.err_code = MNT_OK;
 	if (bus.arg)
 	{
 		if (bus.arg[0] == '-')
-		{
 			j++;
-			SGN = -1;
-		}
+
 		for (; bus.arg[j] != '\0'; j++)
 			if (bus.arg[j] > '9' || bus.arg[j] < '0')
 				flag = 1;
@@ -33,11 +31,12 @@ void f_push(stack_t **head, unsigned int counter)
 		return;
 	}
 
-	n = atoi(bus.arg) * SGN;
+	n = atoi(bus.arg);
 	if (bus.lifi == 0)
 		addnode(head, n);
 	else
 		addqueue(head, n);
+	/*end-if*/
 }
 
 /**

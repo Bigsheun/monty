@@ -12,7 +12,10 @@ int execute(char *content, stack_t **stack, unsigned int counter)
 	char *op, **content_array;
 	instruction_t opst[] = INSTRUCTIONSET;
 
-	content_array = split_arg(content, " \t");
+	content_array = split_arg(content, " \t\r");
+	if (content_array == NULL)
+		return (MNT_ERR_MALLOC);
+
 	op = content_array[0];
 	bus.opcode  = op;
 	if ((op == NULL) || (op[0] == '#'))
@@ -72,6 +75,8 @@ void print_error(int counter, char *op)
 		fprintf(stderr, "L%d: can't pop an empty stack\n", counter);
 	else if (bus.err_code == MNT_ERR_STK_E_SWP)
 		fprintf(stderr, "L%d: can't swap, stack too short\n", counter);
+	else if (bus.err_code == MNT_ERR_MALLOC)
+		fprintf(stderr, "Error: malloc");
 	/*end-if*/
 	fflush(stderr);
 }

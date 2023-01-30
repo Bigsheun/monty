@@ -9,7 +9,7 @@
 */
 int main(int argc, char *argv[])
 {
-	char *content;
+	char *content, *Kontent;
 	stack_t *stack = NULL;
 	unsigned int counter = 0;
 	int result;
@@ -20,9 +20,15 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	content = file_load_all(argv[1]);
+	Kontent = file_load_all(argv[1]);
+	if (Kontent == NULL)
+	{
+		bus.err_code = MNT_ERR_MALLOC;
+		print_error(0, "");
+		exit(EXIT_FAILURE);
+	}
 
-	content = s_getline(content);
+	content = s_getline(Kontent);
 	counter = 0;
 	while (content != NULL)
 	{
@@ -37,7 +43,7 @@ int main(int argc, char *argv[])
 	}
 
 	print_error(counter, bus.opcode);
-	free_all(stack, content);
+	free_all(stack, Kontent);
 
 	if (bus.err_code != MNT_OK)
 	exit(EXIT_FAILURE);
@@ -90,7 +96,7 @@ char *file_load_all(char *Filename)
 	Length = file_Size(Filename);
 	Buffer = (char *) malloc(sizeof(char) * Length + 1);
 	if (Buffer == NULL)
-		fprintf(stderr, "Error: malloc failed\n");
+		return (NULL);
 
 	FP = fopen(Filename, "rb");
 	N = fread(Buffer, sizeof(char), Length, FP);

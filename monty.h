@@ -78,6 +78,7 @@ typedef struct bus_s
 #define MNT_ERR_SYNTX_PUSH 11
 #define MNT_ERR_STK_E_POP 12
 #define MNT_ERR_STK_E_SWP 13
+#define MNT_ERR_MALLOC 14
 
 extern bus_t bus;
 
@@ -134,10 +135,9 @@ void f_rotl(stack_t **head,  __attribute__((unused)) unsigned int counter);
 void f_rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
 /*stack_queue.c*/
 void f_stack(stack_t **head, unsigned int counter);
-void addnode(stack_t **head, int n);
 void f_queue(stack_t **head, unsigned int counter);
+void addnode(stack_t **head, int n);
 void addqueue(stack_t **head, int n);
 void free_stack(stack_t *head);
-
 
 #endif
